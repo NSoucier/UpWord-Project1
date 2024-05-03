@@ -4,16 +4,14 @@ from flask import Flask, redirect, render_template, session, flash, request
 from flask_debugtoolbar import DebugToolbarExtension
 import requests, random
 from sqlalchemy.exc import IntegrityError
-# import os
+import os
 
 from forms import AddUserForm, LoginForm, EditUserForm
 from models import db, connect_db, User, Favorite 
 
 app = Flask(__name__)
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-#     'DATABASE_URL', 'postgresql:///upwordV4'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///upwordV4'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://dalvorup:dz4Cvpgzog2Jf72weDLe4CiE6c7u2L8O@bubble.db.elephantsql.com/dalvorup')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "a-secret"
 
