@@ -27,7 +27,7 @@
                 <ul class="nav navbar-nav navbar-right" style="padding-top: 20px;">
                     <li>
                     <form action="/search">
-                        <input class="form-control" placeholder="Keyword search: Love, Fear God, Joy, etc. " id="search" name="search" style="width: 315px;">
+                        <input class="form-control" minlength="3" placeholder="Keyword search: Love, Fear God, Joy, etc. " id="search" name="search" style="width: 315px;">
                     </form>
                     </li>
                     {% if not session['username'] %}

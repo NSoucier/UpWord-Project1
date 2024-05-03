@@ -1,6 +1,5 @@
 $('.word').on('click', hideWord);
 $('#restart').on('click', resetGame);
-$('.fa-heart').on('click', toggleFave);
 $('.fa-heart').hover(fillHeart);
 
 // Gameplay funtion: hides word when clicked on
@@ -15,13 +14,7 @@ function resetGame(e) {
     $('.card-body').find('span, li, i').css('color', 'black');
 }
 
-// Adds/removes verse from users favorites list
-function toggleFave(e) {
-    e.target.classList.toggle('fa-solid'); // class of favorite
-    e.target.classList.toggle('fa-regular'); // class of non-favorite
-}
-
-// Fills heart icon when mouse hovers
+// Fills heart icon when mouse hovers to resemble adding to favorites
 function fillHeart(e) {
     e.target.classList.toggle('fa-solid'); // class of favorite
 }
