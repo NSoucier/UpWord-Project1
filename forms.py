@@ -18,6 +18,7 @@ class LoginForm(FlaskForm):
     
 class EditUserForm(FlaskForm):
     """ Edit user details """
+    
     username = StringField('Username', validators=[InputRequired()])
     email = EmailField('Email', validators=[InputRequired()])
     first_name = StringField('First name', validators=[InputRequired()])

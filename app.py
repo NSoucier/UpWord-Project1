@@ -121,9 +121,6 @@ def edit_user():
     user = User.query.filter_by(username=session['username']).first()
     form = EditUserForm(obj=user)
     
-    # r = requests.get('https://bolls.life/static/bolls/app/views/languages.json')
-    # english = r.json()[4]
-    
     form.fav_translation.choices = translations
     
     if form.validate_on_submit():
@@ -181,9 +178,6 @@ def verse_lookup():
     data = dict()
     
     if result['verse1']: # get verses
-        # r = requests.get(f'https://bolls.life/get-verse/{ version }/{ bookid }/{ chapter }/{ verse }/')
-        # verse = [r.json()]
-        # data['verse'] = result['verse']
         
         verse1 = int(result['verse1'])
         verse2 = int(result['verse2']) if result['verse2'] else (verse1)
