@@ -1,0 +1,69 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h4 id="heading">Begin Memory Game!</h4>
+
+<div class="card text-center w-75">
+    <div class="card-body">
+        <h5 class="card-title">Choose a passage to memorize.</h5> <br>
+        <form action="/game">
+            <label for="">Book</label>
+            <select name="book">
+                {% for id, book in bookDict.items() %}
+                <option value="{{ id }}">{{ book }}</option>
+                {% endfor %}
+            </select>
+            <label for="">Chapter</label>
+            <input class="lookup" type="text" name="chapter" placeholder="1" required>
+            <label for="">Verses</label>
+            <input class="verses" type="number" name="verse1" min="1", max="176" placeholder="3" required>
+            <label for="">to</label>
+            <input class="verses" type="number" name="verse2" min="1", max="176" placeholder="Opt.">
+            <br> <br>
+            <label for="">Translation</label>
+            <select name="translation">
+                <option value="">Default: {{ translation }} </option>
+                {% for option in translations %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary btn-sm">Submit</button>
+        </form>       
+    </div>
+</div>
+
+<br> <br>
+
+<div class="container" id="game-scripture">
+    Memory game instructions:
+    <ol>
+        <li id="steps">Pick a passage using the form above.</li>
+        <li id="steps">Read the passage ALOUD once.</li>
+        <li id="steps">Click on ONE or MORE words below to erase them from the screen.</li>
+        <li id="steps">Read the passage aloud again, filling in the missing blanks.</li>
+        <li id="steps">Repeat steps 3. and 4. until no more words are left on the screen.</li>
+    </ol> 
+</div>
+
+<br>
+
+{% if result %}
+<div class="card w-75 game-verse">
+    <div class="card-body">
+        {% autoescape off %}
+            <h4><i>{{ bookDict[result[0]['book']] }} {{ result[0]['chapter'] }} ({{ result[0]['translation'] }})</i></h4>
+            {% for text in result %}
+            <b>{{ text['verse'] }}</b>
+            {% for word in text['text'] %}
+            <span class="word">{{word}}</span>
+            {% endfor %} 
+            {% endfor %}
+        {% endautoescape %}
+    </div>
+</div>
+<button class="btn btn-success" id="restart">Restart</button>
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+      <h2 class="join-message">Edit your profile</h2>
+      <form method="POST" id="user_form">
+        {{ form.hidden_tag() }}
+
+        {% for field in form if field.widget.input_type != 'hidden' %}
+          {{ field.label(class='form-label') }}
+          {{ field(class="form-control") }}
+          
+          {% for error in field.errors %}
+            <span class="form-text text-danger">{{ error }}</span>
+          {% endfor %}          
+        
+          {% endfor %}
+  
+        <button class="btn btn-primary btn-md">Save</button>
+        <button formmethod="POST" formaction="/account/delete" class="btn btn-danger btn-md">Delete Account</button>
+      </form>
+    </div>
+</div>
+
+{% endblock %}

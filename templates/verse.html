@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h4>Search results:</h4>
+
+{% autoescape off %}
+<!-- Show selected verses -->
+{% if not data %}
+<p id="scripture">
+    {% for verse in text %}
+    <b>{{verse['verse']}}</b> {{verse['text']}}
+    {% endfor %}
+</p>
+<p id="scripture"><i>{{bookDict[text[0]['book']]}} {{text[0]['chapter']}}:{{text[0]['verse']}}{% if verse2 > text[0]['verse'] %}-{{ verse2 }}
+    {% endif %}
+    ({{text[0]['translation']}})</i></p>
+
+<!-- Show whole chapter -->
+{% else %}
+<p id="scripture">
+    {% for v in verse %}
+    <b>{{v['verse']}}</b> {{v['text']}}
+    {% endfor %}
+</p>
+
+<p id="scripture"><i>{{ data['book'] }} {{ data['chapter'] }}:{{ data['verse'] }} ({{ data['translation'] }})</i></p></p>
+{% endif %}
+{% endautoescape %}
+
+{% endblock %}

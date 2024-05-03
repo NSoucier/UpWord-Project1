@@ -1,0 +1,20 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h4>Search results for <i>{{ search }}</i>:</h4>
+
+<div class="card text-center w-75">
+    <div class="card-body">
+        {% autoescape off %}
+        {% for result in query %}
+        <p class="card-text"><p><b>{{ result['verse'] }}</b> {{ result['text'] }} </p>
+        <p><i>{{ bookDict[result['book']] }} {{ result['chapter'] }}:{{ result['verse'] }} ({{ result['translation'] }})</i></p></p>
+        <!-- <a href="/favorites" class="btn btn-primary">Add to favorites</a> -->
+        <hr>
+        {% endfor %}
+        {% endautoescape %}
+    </div>
+</div>
+
+{% endblock %}

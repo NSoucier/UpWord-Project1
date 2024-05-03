@@ -1,0 +1,58 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h4>Your favorite verses!</h4>
+<br>
+
+<p class="d-inline-flex gap-1">
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+      Add another verse!
+    </a>
+  </p>
+  <div class="collapse" id="collapseExample">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add another verse!</h5> <br>
+            <form action="/add-section" method="POST">
+                <label for="">Book</label>
+                <select name="book">
+                    {% for id, book in bookDict.items() %}
+                    <option value="{{ id }}">{{ book }}</option>
+                    {% endfor %}
+                </select>
+                <label for="">Chapter</label>
+                <input class="lookup" type="text" name="chapter" placeholder="4" required>
+                <label for="">Verses</label>
+                <input class="verses" type="number" name="verse1" min="1", max="176" placeholder="12" required>
+                <label for="">to</label>
+                <input class="verses" type="number" name="verse2" min="1", max="176" placeholder="Opt.">
+                <br> <br>
+                <label for="">Translation</label>
+                <select name="translation">
+                    <option value="">Default: {{ translation }} </option>
+                    {% for option in translations %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-primary btn-sm">Add</button>
+            </form>       
+        </div>
+    </div>
+</div>
+
+<br>
+
+{% autoescape off %}
+{% for fave in faves %}
+<hr>
+<p id="scripture">{{fave.text}}</p>
+<p id="scripture"><i>{{fave.book}} {{fave.chapter}}:{{fave.verse}}{% if fave.num_of_verses > 1 %}-{{fave.verse + fave.num_of_verses - 1}}{% endif %}
+     ({{fave.translation}})</i> 
+    <a href="/favorites/{{fave.id}}/delete"><i class="fa-solid fa-trash"></i></a>
+</p>
+
+{% endfor %}
+{% endautoescape %}
+
+{% endblock %}

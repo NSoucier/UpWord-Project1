@@ -1,0 +1,155 @@
+/* Cards are 75% and make it look off center, how do i center a card of w-75 */
+
+html {
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(217deg, rgba(255, 0, 0, 0.55), rgba(255, 0, 0, 0.0) 70.71%),
+  linear-gradient(127deg, rgba(0,255,0,.50), rgba(0,255,0,0) 70.71%),
+  linear-gradient(336deg, rgba(0,0,255,.55), rgba(0, 0, 255, 0) 70.71%);
+  background-repeat: no-repeat;
+  height: 100%;
+  background-attachment: fixed;
+}
+
+.container {
+  padding-bottom: 65px;
+}
+
+/* Navbar */
+
+#home {
+  color: white;
+}
+
+#user-link {
+  color: white;
+}
+
+.navbar {
+    height: 70px;
+    border-bottom: 4px solid rgb(255, 255, 255);
+    margin-bottom: 1rem;
+    position: relative;
+    background-color: black;
+    color: white;
+}
+
+.navbar-brand > img {
+    display: inline-block;
+    margin-bottom: 2px;
+    margin-right: 5px;
+    width: 60px;
+    border-radius: 50%;
+}
+
+.nav-link {
+  margin-right: 7px;
+  display: flex;
+  align-items: center;
+}
+
+#logout {
+  padding-left: 0;
+  padding-right: 0;
+  color: white;
+}
+
+#search {
+  margin-right: 10px;
+}
+
+/* Forms */
+
+.form-control {
+  margin-bottom: 18px;
+}
+
+.lookup {
+  border: 1px solid rgba(185, 182, 182, 0.673);
+  border-radius: 5px;
+  width: 130px;
+}
+
+.verses {
+  border: 1px solid rgba(185, 182, 182, 0.673);
+  border-radius: 5px;
+  width: 55px;  
+}
+
+.btn-sm {
+  height: 30px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.fa-trash {
+  color: rgba(209, 4, 4, 0.853);
+  margin-left: 10px;
+}
+
+select {
+  border: 1px solid rgba(185, 182, 182, 0.673);
+  border-radius: 5px;
+}
+
+#restart {
+  margin-top: 20px;
+  background-color: green;
+  margin-left: 12.5%;
+}
+
+/* Text */
+
+b {
+  font-size: 90%;
+  vertical-align: super;
+  font-weight: bolder;
+}
+
+.word {
+  font-size: 1.5rem;
+  line-height: 2.5;
+  text-decoration: underline;
+  text-decoration-color: rgba(42, 42, 255, 0.547);
+}
+
+#results {
+  color: rgb(0, 0, 0);
+  font-size: larger;
+}
+
+#scripture {
+  font-size: larger;
+  font-weight: 450;
+}
+
+#steps {
+  padding-bottom: 9px;
+}
+
+#heading {
+  margin-left: 12.5%;
+}
+
+#game-scripture {
+  font-size: larger;
+  font-weight: 450;
+  margin-left: 12.5%;
+}
+
+/* Cards */
+
+.card-body {
+  background-color: #ffd37f2b;
+}
+
+.alert {
+  border: 3px solid black;
+}
+
+.card {
+  margin: 0 auto;
+}

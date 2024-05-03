@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<h4 id="heading">Compare two translations!</h4>
+
+<div class="card text-center w-75">
+    <div class="card-body">
+        <h5 class="card-title">Choose a passage to compare.</h5> <br>
+        <form action="/comparison">
+            <label>Book</label>
+            <select name="book">
+                {% for id, book in bookDict.items() %}
+                <option value="{{ id }}">{{ book }}</option>
+                {% endfor %}
+            </select>
+            <label for="" style="padding-left: 10px;">Chapter</label>
+            <input class="lookup" type="text" name="chapter" placeholder="3" required>
+            <br> <br>
+            <label for="">Translation 1</label>
+            <select name="translation1">
+                <option value="">Default: {{ translation }} </option>
+                {% for option in translations %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+            <label for="" style="padding-left: 10px;">Translation 2</label>
+            <select name="translation2">
+                <option value="">Default: {{ translation }} </option>
+                {% for option in translations %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+            <br> <br>
+            <button class="btn btn-primary btn-sm">Compare</button>
+        </form>       
+    </div>
+</div>
+
+{% block body %} {% endblock %}
+
+{% endblock %}
