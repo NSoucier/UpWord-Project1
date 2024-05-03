@@ -170,8 +170,8 @@ def search():
     """ Display keyword search results """
     result = request.args['search']
     r = requests.get(f'https://bolls.life/find/{translation}/?search={result}&match_case=false&match_whole=true')
-        
-    return render_template('search.html', query=r.json(), search=result, bookDict=bookDict)
+    
+    return render_template('search.html', query=r.json(), search=result, bookDict=bookDict, num=len(r.json()))
 
 @app.route('/verse')
 def verse_lookup():
