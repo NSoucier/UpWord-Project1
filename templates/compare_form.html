@@ -10,7 +10,7 @@
         <form action="/comparison">
             <label>Book</label>
             <select name="book">
-                {% for id, book in bookDict.items() %}
+                {% for id, book in book_dict.items() %}
                 <option value="{{ id }}">{{ book }}</option>
                 {% endfor %}
             </select>

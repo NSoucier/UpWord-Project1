@@ -12,14 +12,14 @@
     <b>{{verse['verse']}}</b> {{verse['text']}}
     {% endfor %}
 </p>
-<p id="scripture"><i>{{bookDict[text[0]['book']]}} {{text[0]['chapter']}}:{{text[0]['verse']}}{% if verse2 > text[0]['verse'] %}-{{ verse2 }}
+<p id="scripture"><i>{{book_dict[text[0]['book']]}} {{text[0]['chapter']}}:{{text[0]['verse']}}{% if verse2 > text[0]['verse'] %}-{{ verse2 }}
     {% endif %}
     ({{text[0]['translation']}})</i></p>
 
 <!-- Show whole chapter -->
 {% else %}
 <p id="scripture">
-    {% for v in verse %}
+    {% for v in verses %}
     <b>{{v['verse']}}</b> {{v['text']}}
     {% endfor %}
 </p>

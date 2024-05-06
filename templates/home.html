@@ -8,7 +8,7 @@
         <form action="/verse">
             <label for="">Book</label>
             <select name="book">
-                {% for id, book in bookDict.items() %}
+                {% for id, book in book_dict.items() %}
                 <option value="{{ id }}">{{ book }}</option>
                 {% endfor %}
             </select>
@@ -39,7 +39,7 @@
         <h5 class="card-title">Random verse of the day!</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">From anywhere in the Bible.</h6>
         <p class="card-text"><p><b>{{random['verse']}}</b> {{random['text']}} </p>
-        <p><i>{{ bookDict[random['book']] }} {{ random['chapter'] }}:{{ random['verse'] }} ({{ translation }})</i> 
+        <p><i>{{ book_dict[random['book']] }} {{ random['chapter'] }}:{{ random['verse'] }} ({{ translation }})</i> 
             {% if session['username'] %}
             <a href="/add-favorite/{{random['book']}}/{{random['chapter']}}/{{random['verse']}}"><i class="fa-regular fa-heart"></i></a>
             {% endif %} 
@@ -49,7 +49,7 @@
         <h5 class="card-title">Not-so-random verse of the day!</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">From selected scriptures.</h6>
         <p class="card-text"><p><b>{{chosen['verse']}}</b> {{chosen['text']}} </p>
-        <p><i>{{ bookDict[book] }} {{ chapter }}:{{ chosen['verse'] }} ({{ translation }})</i>
+        <p><i>{{ book_dict[book] }} {{ chapter }}:{{ chosen['verse'] }} ({{ translation }})</i>
             {% if session['username'] %} 
             <a href="/add-favorite/{{book}}/{{chapter}}/{{chosen['verse']}}"><i class="fa-regular fa-heart"></i></a>
             {% endif %} 

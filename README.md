@@ -26,6 +26,17 @@ The following tech stack was used for this project: Python, Flask, PostreSQL, Ja
 This project uses the Bolls Bible API. It contains text from the Bible and allows the user to fetch specific information such as keywords or a particular chapter/verse.
 https://bolls.life/api/
 
+## SETUP
+To get this application running, make sure you do the following in the Terminal:
+1. python3 -m venv venv
+2. source venv/bin/activate
+3. pip3 install -r requirements.txt
+4. createdb upwordV4
+5. flask run
+
+## TESTS
+Information on how to run tests can be found at the top of the test files. 
+
 ## NOTES
 Please leave a comment for any future features you would like to see implemented.
 

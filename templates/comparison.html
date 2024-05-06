@@ -7,13 +7,13 @@
     <div class="row" id="results">
         {% autoescape off %}
         <div class="col">
-            <h4><i>{{ bookDict[result[0][0]['book']] }} {{ result[0][0]['chapter'] }} ({{ result[0][0]['translation'] }})</i></h4>
+            <h4><i>{{ book_dict[result[0][0]['book']] }} {{ result[0][0]['chapter'] }} ({{ result[0][0]['translation'] }})</i></h4>
             {% for text in result[0] %}
             <b>{{ text['verse'] }}</b> {{ text['text'] }} 
             {% endfor %}
         </div>
         <div class="col">
-            <h4><i>{{ bookDict[result[0][0]['book']] }} {{ result[0][0]['chapter'] }} ({{ result[1][0]['translation'] }})</i></h4>
+            <h4><i>{{ book_dict[result[0][0]['book']] }} {{ result[0][0]['chapter'] }} ({{ result[1][0]['translation'] }})</i></h4>
             {% for text in result[1] %}
             <b>{{ text['verse'] }}</b> {{ text['text'] }} 
             {% endfor %}

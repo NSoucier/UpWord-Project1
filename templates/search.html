@@ -9,7 +9,7 @@
         {% autoescape off %}
         {% for result in query %}
         <p class="card-text"><p><b>{{ result['verse'] }}</b> {{ result['text'] }} </p>
-        <p><i>{{ bookDict[result['book']] }} {{ result['chapter'] }}:{{ result['verse'] }} ({{ result['translation'] }})</i>
+        <p><i>{{ book_dict[result['book']] }} {{ result['chapter'] }}:{{ result['verse'] }} ({{ result['translation'] }})</i>
             {% if session['username'] %} 
             <a href="/add-favorite/{{ result['book'] }}/{{ result['chapter'] }}/{{ result['verse'] }}"><i class="fa-regular fa-heart"></i></a>
             {% endif %}

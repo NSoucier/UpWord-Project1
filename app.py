@@ -20,16 +20,16 @@ app.config['SECRET_KEY'] = "a-secret"
 connect_db(app)
 
 # Get list of books and corresponding ids for random verse feature
-response = requests.get('https://bolls.life/static/bolls/app/views/translations_books.json')
-bookDict = {book['bookid']:book['name'] for book in response.json()['ESV']}
-filteredBooks = [19, 20, 43, 45, 46, 48, 49, 50, 51, 58, 59]
+response_books = requests.get('https://bolls.life/static/bolls/app/views/translations_books.json')
+book_dict = {book['bookid']:book['name'] for book in response_books.json()['ESV']}
+filtered_books = [19, 20, 43, 45, 46, 48, 49, 50, 51, 58, 59]
 
 # set default translation 
 translation = 'ESV'
 
 # get list of translations in english
-response2 = requests.get('https://bolls.life/static/bolls/app/views/languages.json')
-english = response2.json()[4]
+response_translations = requests.get('https://bolls.life/static/bolls/app/views/languages.json')
+english = response_translations.json()[4]
 translations = sorted([code['short_name'] for code in english['translations']])
 
 @app.errorhandler(404)
@@ -40,16 +40,16 @@ def page_not_found(e):
 @app.route("/")
 def show_home():
     """ Show homepage """
-    r = requests.get(f'https://bolls.life/get-random-verse/{translation}/')
+    response_translation = requests.get(f'https://bolls.life/get-random-verse/{translation}/')
 
-    bookid = random.choice(filteredBooks) # picks random book
-    chapters = response.json()['ESV'][bookid-1]['chapters'] # finds number of chapters in book
+    bookid = random.choice(filtered_books) # picks random book
+    chapters = response_books.json()['ESV'][bookid-1]['chapters'] # finds number of chapters in book
     chapterid = random.randint(1,chapters) # picks random chapter
-    resp = requests.get(f'https://bolls.life/get-chapter/{translation}/{bookid}/{chapterid}') 
-    verseid = random.randint(1,len(resp.json())) # picks random verse
-    verse = requests.get(f'https://bolls.life/get-verse/{translation}/{bookid}/{chapterid}/{verseid}')
+    response_chapter = requests.get(f'https://bolls.life/get-chapter/{translation}/{bookid}/{chapterid}') 
+    verseid = random.randint(1,len(response_chapter.json())) # picks random verse
+    response_verse = requests.get(f'https://bolls.life/get-verse/{translation}/{bookid}/{chapterid}/{verseid}')
     
-    return render_template("home.html", random=r.json(), chosen=verse.json(), bookDict=bookDict, 
+    return render_template("home.html", random=response_translation.json(), chosen=response_verse.json(), book_dict=book_dict, 
                            translation=translation, book=bookid, chapter=chapterid, translations=translations)
 
 ################### User routes ###################
@@ -67,7 +67,7 @@ def signup():
             db.session.commit()
         
         except IntegrityError:
-            flash('Username already taken', 'danger')
+            flash('Username/email already taken', 'danger')
             return render_template('signup.html', form=form)
 
         session['username'] = user.username
@@ -124,17 +124,22 @@ def edit_user():
     form.fav_translation.choices = translations
     
     if form.validate_on_submit():
-        user.username = form.username.data
-        user.email = form.email.data
-        user.first_name = form.first_name.data
-        user.last_name = form.last_name.data
-        user.fav_translation = form.fav_translation.data
-        globals()['translation'] = form.fav_translation.data
-        db.session.add(user)
-        db.session.commit()
-        session['username'] = user.username
-        flash('Account updated successfully.', 'success')
-        return redirect('/')
+        try:
+            user.username = form.username.data
+            user.email = form.email.data
+            user.first_name = form.first_name.data
+            user.last_name = form.last_name.data
+            user.fav_translation = form.fav_translation.data
+            globals()['translation'] = form.fav_translation.data
+            db.session.add(user)
+            db.session.commit()
+            session['username'] = user.username
+            flash('Account updated successfully.', 'success')
+            return redirect('/')
+        
+        except IntegrityError:
+            flash('Username/email already taken', 'danger')
+            return render_template('user_details.html', form=form)
     
     else:
         return render_template('user_details.html', form=form)
@@ -164,9 +169,9 @@ def delete_user():
 def search():
     """ Display keyword search results """
     result = request.args['search']
-    r = requests.get(f'https://bolls.life/find/{translation}/?search={result}&match_case=false&match_whole=true')
+    user_search = requests.get(f'https://bolls.life/find/{translation}/?search={result}&match_case=false&match_whole=true')
     
-    return render_template('search.html', query=r.json(), search=result, bookDict=bookDict, num=len(r.json()))
+    return render_template('search.html', query=user_search.json(), search=result, book_dict=book_dict, num=len(req.json()))
 
 @app.route('/verse')
 def verse_lookup():
@@ -175,7 +180,7 @@ def verse_lookup():
     version = result['translation'] if result['translation'] else translation 
     bookid = int(result['book'])
     chapter = int(result['chapter'])
-    data = dict()
+    data = dict() # dict of data for chapter, verses, translation, book
     
     if result['verse1']: # get verses
         
@@ -190,31 +195,31 @@ def verse_lookup():
                         'verses': verses,
                         'book': bookid,
                         'chapter': chapter}
-        r = requests.post(url, headers=headers, json=body)
+        response_verses = requests.post(url, headers=headers, json=body)
         
-        if (r.status_code == 400 or 'text' not in r.json()[0][0]):
+        if (response_verses.status_code == 400 or 'text' not in response_verses.json()[0][0]):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/')
         
-        return render_template('verse.html', text=r.json()[0], bookDict=bookDict, data=data, verse2=verse2)
+        return render_template('verse.html', text=response_verses.json()[0], book_dict=book_dict, data=data, verse2=verse2)
 
     else: # get chapter
-        r = requests.get(f'https://bolls.life/get-chapter/{ version }/{ bookid }/{ chapter }/')
-        if (r.status_code == 404 or not r.json()):
+        response_chapter = requests.get(f'https://bolls.life/get-chapter/{ version }/{ bookid }/{ chapter }/')
+        if (response_chapter.status_code == 404 or not response_chapter.json()):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/')
     
-        verse = r.json()
-        data['verse'] = f'1-{len(verse)}'    
-        data['book'] = bookDict[bookid]
+        verses = response_chapter.json()
+        data['verse'] = f'1-{len(verses)}'    
+        data['book'] = book_dict[bookid]
         data['translation'] = version
         data['chapter'] = chapter
-        return render_template('verse.html', verse=verse, data=data)
+        return render_template('verse.html', verses=verses, data=data)
 
 @app.route('/compare')
 def compare_form():
     """ Show form to compare two translations"""
-    return render_template('compare_form.html', bookDict=bookDict, translation=translation, translations=translations)
+    return render_template('compare_form.html', book_dict=book_dict, translation=translation, translations=translations)
 
 @app.route('/comparison')
 def comparison():
@@ -225,12 +230,12 @@ def comparison():
     version1 = result['translation1'] if result['translation1'] else translation
     version2 = result['translation2'] if result['translation2'] else translation 
 
-    resp = requests.get(f'https://bolls.life/get-chapter/{translation}/{bookid}/{chapter}') 
-    if resp.status_code == 404:
+    response_chapter = requests.get(f'https://bolls.life/get-chapter/{translation}/{bookid}/{chapter}') 
+    if response_chapter.status_code == 404:
         flash('Scripture could not be found at this time, please try a different one.', 'warning')
-        return render_template('compare_form.html', bookDict=bookDict, translation=translation, translations=translations)
+        return render_template('compare_form.html', book_dict=book_dict, translation=translation, translations=translations)
     
-    verses = [*range(1, len(resp.json()))]
+    verses = [*range(1, len(response_chapter.json()))]
     
     url = 'https://bolls.life/get-paralel-verses/'
     headers = {"Content-Type": "application/json"}
@@ -238,13 +243,13 @@ def comparison():
                     'verses': verses,
                     'book': bookid,
                     'chapter': chapter}
-    r = requests.post(url, headers=headers, json=body)
+    response_comparison = requests.post(url, headers=headers, json=body)
     
-    if r.status_code == 400:
+    if response_comparison.status_code == 400:
         flash('Scripture could not be found at this time, please try a different one.', 'warning')
-        return render_template('compare_form.html', bookDict=bookDict, translation=translation, translations=translations)
+        return render_template('compare_form.html', book_dict=book_dict, translation=translation, translations=translations)
      
-    return render_template('comparison.html', result=r.json(), bookDict=bookDict, translation=translation, translations=translations)
+    return render_template('comparison.html', result=response_comparison.json(), book_dict=book_dict, translation=translation, translations=translations)
 
 ################### Favorites ###################
 
@@ -258,15 +263,15 @@ def show_favs():
     user = User.query.filter_by(username=session['username']).first()
     faves = Favorite.query.filter_by(user_id = user.id).order_by(Favorite.id.desc()).all()
     
-    return render_template('favorites.html', faves=faves, bookDict=bookDict, translation=translation, translations=translations)
+    return render_template('favorites.html', faves=faves, book_dict=book_dict, translation=translation, translations=translations)
 
 @app.route('/add-favorite/<int:book>/<int:chapter>/<int:verseID>')
 def add_fave(book, chapter, verseID):
     """ Adds verse to favorite """
-    r = requests.get(f'https://bolls.life/get-verse/{ translation }/{ book }/{ chapter }/{ verseID }/')        
-    verse = r.json()
+    response_verse = requests.get(f'https://bolls.life/get-verse/{ translation }/{ book }/{ chapter }/{ verseID }/')        
+    verse = response_verse.json()
     verse['bookid'] = book
-    verse['book'] = bookDict[book]
+    verse['book'] = book_dict[book]
     verse['chapter'] = chapter
     verse['translation'] = translation
     user = User.query.filter_by(username=session['username']).first()
@@ -294,16 +299,16 @@ def add_section():
                         'verses': verses,
                         'book': bookid,
                         'chapter': chapter}
-        r = requests.post(url, headers=headers, json=body)
-        if (r.status_code == 400 or 'text' not in r.json()[0][0]):
+        response_verses = requests.post(url, headers=headers, json=body)
+        if (response_verses.status_code == 400 or 'text' not in response_verses.json()[0][0]):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/favorites')
         
-        temp = r.json()[0]
+        temp = response_verses.json()[0]
         text = ' '.join([text['text'] for text in temp]) # joins list of verses together to be stored in DB
         user = User.query.filter_by(username=session['username']).first()
     
-        fave = Favorite(user_id=user.id, book_code=bookid, book=bookDict[bookid], chapter=chapter,
+        fave = Favorite(user_id=user.id, book_code=bookid, book=book_dict[bookid], chapter=chapter,
                         verse=verse1, num_of_verses=len(verses), text=text, translation=version)
         db.session.add(fave)
         db.session.commit() 
@@ -341,17 +346,17 @@ def show_game():
                         'verses': verses,
                         'book': bookid,
                         'chapter': chapter}
-        r = requests.post(url, headers=headers, json=body)
-        if (r.status_code == 400 or 'text' not in r.json()[0][0]):
+        response_verses = requests.post(url, headers=headers, json=body)
+        if (response_verses.status_code == 400 or 'text' not in response_verses.json()[0][0]):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/game')
         
-        temp = r.json()[0] 
+        temp = response_verses.json()[0] 
         for text in temp: # splits up text to allow for styling of individual words
             if 'text' in text:
                 text['text'] = text['text'].split()
         
-        return render_template('game.html', result=temp, bookDict=bookDict, translation=translation, translations=translations)
+        return render_template('game.html', result=temp, book_dict=book_dict, translation=translation, translations=translations)
 
         
-    return render_template('game.html', result=None, bookDict=bookDict, translation=translation, translations=translations)
+    return render_template('game.html', result=None, book_dict=book_dict, translation=translation, translations=translations)

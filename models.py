@@ -47,7 +47,7 @@ class User(db.Model):
     
     @classmethod
     def signup(cls, username, password, email):
-        """ Hash password and add user to db """
+        """ Salt and hash password and add user to db """
         
         hashed_pw = bcrypt.generate_password_hash(password).decode('UTF-8')
         

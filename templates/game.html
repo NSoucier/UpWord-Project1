@@ -10,7 +10,7 @@
         <form action="/game">
             <label for="">Book</label>
             <select name="book">
-                {% for id, book in bookDict.items() %}
+                {% for id, book in book_dict.items() %}
                 <option value="{{ id }}">{{ book }}</option>
                 {% endfor %}
             </select>
@@ -52,7 +52,7 @@
 <div class="card w-75 game-verse">
     <div class="card-body">
         {% autoescape off %}
-            <h4><i>{{ bookDict[result[0]['book']] }} {{ result[0]['chapter'] }} ({{ result[0]['translation'] }})</i></h4>
+            <h4><i>{{ book_dict[result[0]['book']] }} {{ result[0]['chapter'] }} ({{ result[0]['translation'] }})</i></h4>
             {% for text in result %}
             <b>{{ text['verse'] }}</b>
             {% for word in text['text'] %}
