@@ -2,9 +2,7 @@
 
 # run these tests like:
 #
-#  FLASK_ENV=production python -m unittest test_message_views.py
-# 
-#  or: python -m unittest test_user_models.py
+#  or: python -m unittest test_views.py
 
 from app import app
 import os
@@ -117,7 +115,7 @@ class UpWordViewsTestCase(TestCase):
         resp = self.client.get("/compare")
         
         self.assertEqual(resp.status_code, 200)
-        self.assertIn('Compare two translations:', str(resp.data))
+        self.assertIn('Compare two translations!', str(resp.data))
     
     def test_user_details(self):
         """Test link to display/edit user details is working"""
@@ -142,4 +140,31 @@ class UpWordViewsTestCase(TestCase):
             # check for redirect to login page
             self.assertEqual(resp.status_code, 302)
             self.assertIn('login', str(resp.data))
-        
+            
+    def test_favorties_redirect(self):
+        """Test if user can add a section of veres to favorites"""
+        with app.test_client() as client:
+            with client.session_transaction() as sesh:
+                sesh['username'] = self.u.username 
+                           
+            resp = client.post('/add-section',
+                               data={'book': '1', 'chapter': '1', 'translation': 'MSG',
+                                     'verse1': '1', 'verse2': '2'})
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 302)
+            self.assertIn(resp.location, '/favorites')
+
+    def test_favorties_follow_redirect(self):
+        """Test if user can add a section of veres to favorites"""
+        with app.test_client() as client:
+            with client.session_transaction() as sesh:
+                sesh['username'] = self.u.username 
+                           
+            resp = client.post('/add-section',
+                               data={'book': '1', 'chapter': '1', 'translation': 'MSG',
+                                     'verse1': '1', 'verse2': '2'}, follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('In the beginning', html)

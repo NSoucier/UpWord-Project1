@@ -43,7 +43,7 @@ class FavoriteModelTestCase(TestCase):
             db.session.commit()
             
             f = Favorite(user_id=9876,book_code=1,book='book',chapter=1,
-                         verse=1,num_of_verses=1,text='text',translation='ESV')
+                         verse=1,num_of_verses=1,text='text from chapter 1',translation='ESV')
             f.id = 99
             db.session.add(f)
             db.session.commit()            
@@ -97,4 +97,25 @@ class FavoriteModelTestCase(TestCase):
             f = Favorite.query.filter_by(id=self.f.id).one_or_none()
             
             self.assertEqual(None, f)
-        
+            
+    def test_add_fave_redirection(self):
+        """Test for user to add a favorite"""
+        with self.client as c:
+            with c.session_transaction() as sesh:
+                sesh['username'] = self.u.username
+                
+            resp = c.get("/add-favorite/1/1/1", follow_redirects=True)
+            # check for redirection to favorites page
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Genesis', str(resp.data))
+
+    def test_delete_fave_redirection(self):
+        """Test for user to delete a favorite"""
+        with self.client as c:
+            with c.session_transaction() as sesh:
+                sesh['username'] = self.u.username
+                
+            resp = c.get(f'/favorites/{self.f.id}/delete', follow_redirects=True)
+            # check for redirection to favorites page
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn('text from chapter 1', str(resp.data))

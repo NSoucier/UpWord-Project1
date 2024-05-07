@@ -134,3 +134,25 @@ class UserModelTestCase(TestCase):
             
             self.assertEqual(None, faves)
             self.assertEqual(None, user)
+    
+    def test_signup(self):
+        """Test to create new user and add to db"""
+        with app.test_client() as client:                           
+            resp = client.post('/signup',
+                               data={'username': 'testuser', 'password': 'testpassword',
+                                     'email': 'testemail@test.com'})
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('testuser', html) 
+            
+    def test_username_taken(self):
+        """Test to create new user with existing username"""
+        with app.test_client() as client:                           
+            resp = client.post('/signup',
+                               data={'username': 'testing99', 'password': 'testpassword',
+                                     'email': 'testemail@test.com'})
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('Sign me up!', html)                    
