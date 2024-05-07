@@ -23,7 +23,7 @@ When visiting the site, the user will be brough to the home page where they can 
 The following tech stack was used for this project: Python, Flask, PostreSQL, JavaScript, SQLAlchemy, Jinja, RESTful APIs, HTML, CSS, WTForms, Boostrap, and Bcrypt
 
 ## API
-This project uses the Bolls Bible API. It contains text from the Bible and allows the user to fetch specific information such as keywords or a particular chapter/verse.
+This project uses the Bolls Bible API. It contains text from the Bible and allows the user to fetch specific information such as keywords or a particular chapter/verse. No authentication is required.
 https://bolls.life/api/
 
 ## SETUP

@@ -32,22 +32,25 @@ response_translations = requests.get('https://bolls.life/static/bolls/app/views/
 english = response_translations.json()[4]
 translations = sorted([code['short_name'] for code in english['translations']])
 
-@app.errorhandler(404)
+@app.errorhandler(Exception)
 def page_not_found(e):
-    """ Show error 404 page """
-    return render_template('404.html'), 404
+    """ Show error page """
+    return render_template('404.html', e=e)
 
 @app.route("/")
 def show_home():
     """ Show homepage """
     response_translation = requests.get(f'https://bolls.life/get-random-verse/{translation}/')
-
+    response_translation.raise_for_status()
+    
     bookid = random.choice(filtered_books) # picks random book
     chapters = response_books.json()['ESV'][bookid-1]['chapters'] # finds number of chapters in book
     chapterid = random.randint(1,chapters) # picks random chapter
     response_chapter = requests.get(f'https://bolls.life/get-chapter/{translation}/{bookid}/{chapterid}') 
+    response_chapter.raise_for_status()
     verseid = random.randint(1,len(response_chapter.json())) # picks random verse
     response_verse = requests.get(f'https://bolls.life/get-verse/{translation}/{bookid}/{chapterid}/{verseid}')
+    response_verse.raise_for_status()
     
     return render_template("home.html", random=response_translation.json(), chosen=response_verse.json(), book_dict=book_dict, 
                            translation=translation, book=bookid, chapter=chapterid, translations=translations)
@@ -170,8 +173,9 @@ def search():
     """ Display keyword search results """
     result = request.args['search']
     user_search = requests.get(f'https://bolls.life/find/{translation}/?search={result}&match_case=false&match_whole=true')
+    user_search.raise_for_status()
     
-    return render_template('search.html', query=user_search.json(), search=result, book_dict=book_dict, num=len(req.json()))
+    return render_template('search.html', query=user_search.json(), search=result, book_dict=book_dict, num=len(user_search.json()))
 
 @app.route('/verse')
 def verse_lookup():
@@ -196,7 +200,8 @@ def verse_lookup():
                         'book': bookid,
                         'chapter': chapter}
         response_verses = requests.post(url, headers=headers, json=body)
-        
+        response_verses.raise_for_status()
+
         if (response_verses.status_code == 400 or 'text' not in response_verses.json()[0][0]):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/')
@@ -205,6 +210,7 @@ def verse_lookup():
 
     else: # get chapter
         response_chapter = requests.get(f'https://bolls.life/get-chapter/{ version }/{ bookid }/{ chapter }/')
+        response_chapter.raise_for_status()
         if (response_chapter.status_code == 404 or not response_chapter.json()):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/')
@@ -231,6 +237,7 @@ def comparison():
     version2 = result['translation2'] if result['translation2'] else translation 
 
     response_chapter = requests.get(f'https://bolls.life/get-chapter/{translation}/{bookid}/{chapter}') 
+    response_chapter.raise_for_status()
     if response_chapter.status_code == 404:
         flash('Scripture could not be found at this time, please try a different one.', 'warning')
         return render_template('compare_form.html', book_dict=book_dict, translation=translation, translations=translations)
@@ -244,6 +251,7 @@ def comparison():
                     'book': bookid,
                     'chapter': chapter}
     response_comparison = requests.post(url, headers=headers, json=body)
+    response_comparison.raise_for_status()
     
     if response_comparison.status_code == 400:
         flash('Scripture could not be found at this time, please try a different one.', 'warning')
@@ -269,6 +277,7 @@ def show_favs():
 def add_fave(book, chapter, verseID):
     """ Adds verse to favorite """
     response_verse = requests.get(f'https://bolls.life/get-verse/{ translation }/{ book }/{ chapter }/{ verseID }/')        
+    response_verse.raise_for_status()
     verse = response_verse.json()
     verse['bookid'] = book
     verse['book'] = book_dict[book]
@@ -300,6 +309,7 @@ def add_section():
                         'book': bookid,
                         'chapter': chapter}
         response_verses = requests.post(url, headers=headers, json=body)
+        response_verses.raise_for_status()
         if (response_verses.status_code == 400 or 'text' not in response_verses.json()[0][0]):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/favorites')
@@ -347,6 +357,7 @@ def show_game():
                         'book': bookid,
                         'chapter': chapter}
         response_verses = requests.post(url, headers=headers, json=body)
+        response_verses.raise_for_status()
         if (response_verses.status_code == 400 or 'text' not in response_verses.json()[0][0]):
             flash('Scripture could not be found at this time, please try a different one.', 'warning')
             return redirect('/game')
