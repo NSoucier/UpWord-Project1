@@ -41,20 +41,18 @@
         <p class="card-text"><p><b>{{random['verse']}}</b> {{random['text']}} </p>
         <p><i>{{ book_dict[random['book']] }} {{ random['chapter'] }}:{{ random['verse'] }} ({{ translation }})</i> 
             {% if session['username'] %}
-            <a href="/add-favorite/{{random['book']}}/{{random['chapter']}}/{{random['verse']}}"><i class="fa-regular fa-heart"></i></a>
+            <a href="/add-favorite/{{random['book']}}/{{random['chapter']}}/{{random['verse']}}"><i class="fa-regular fa-heart" data-toggle="tooltip" data-placement="right" title="Add to favorite"></i></a>
             {% endif %} 
         </p></p>
-        <!-- <a href="/favorites" class="btn btn-primary">Add to favorites</a> -->
         <hr>
         <h5 class="card-title">Not-so-random verse of the day!</h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">From selected scriptures.</h6>
         <p class="card-text"><p><b>{{chosen['verse']}}</b> {{chosen['text']}} </p>
         <p><i>{{ book_dict[book] }} {{ chapter }}:{{ chosen['verse'] }} ({{ translation }})</i>
             {% if session['username'] %} 
-            <a href="/add-favorite/{{book}}/{{chapter}}/{{chosen['verse']}}"><i class="fa-regular fa-heart"></i></a>
+            <a href="/add-favorite/{{book}}/{{chapter}}/{{chosen['verse']}}"><i class="fa-regular fa-heart" data-toggle="tooltip" data-placement="right" title="Add to favorite"></i></a>
             {% endif %} 
         </p></p>
-        <!-- <a href="/favorites" class="btn btn-primary">Add to favorites</a> -->
         {% endautoescape %}
     </div>
 </div>
