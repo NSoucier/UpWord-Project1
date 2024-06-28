@@ -25,6 +25,10 @@ body {
 
 #home {
   color: white;
+  font-family: "Pacifico", cursive;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 29px;
 }
 
 #user-link {
@@ -46,6 +50,7 @@ body {
     margin-right: 5px;
     width: 60px;
     border-radius: 50%;
+    box-shadow: 0 0 3px 1px white;
 }
 
 .nav-link {
