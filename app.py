@@ -29,7 +29,7 @@ translation = 'ESV'
 
 # get list of translations in english
 response_translations = requests.get('https://bolls.life/static/bolls/app/views/languages.json')
-english = response_translations.json()[4]
+english = response_translations.json()[6] # this used to be index [4], but it looks like the API added more languages
 translations = sorted([code['short_name'] for code in english['translations']])
 
 @app.errorhandler(Exception)
