@@ -11,7 +11,7 @@ from models import db, connect_db, User, Favorite
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://dalvorup:dz4Cvpgzog2Jf72weDLe4CiE6c7u2L8O@bubble.db.elephantsql.com/dalvorup')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://postgres.xfaiwqwrroyrdtuqxyqz:3ptQBfuvn4ZmXPqe@aws-0-us-west-1.pooler.supabase.com:5432/postgres')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "a-secret"
 
