@@ -4,6 +4,8 @@ from flask import Flask, redirect, render_template, session, flash, request
 from flask_debugtoolbar import DebugToolbarExtension
 import requests, random
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file 
 import os
 
 from forms import AddUserForm, LoginForm, EditUserForm
@@ -11,7 +13,7 @@ from models import db, connect_db, User, Favorite
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://postgres.vxpljaugyqwdwayklkwf:CvDcVG48Kfeezgrw@aws-0-us-west-1.pooler.supabase.com:5432/postgres')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "a-secret"
 
